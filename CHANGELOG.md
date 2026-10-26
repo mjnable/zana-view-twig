@@ -3,6 +3,13 @@
 All Zana packages share one version number and are released together. A release that did
 not change this package is not listed.
 
+## 2.2.0 — unreleased
+
+### Added
+
+- `TwigCache`: clears and warms the compiled templates for `cache:clear` and `cache:warm`
+  (FE-18).
+
 ## 2.1.0 — 2026-10-26
 
 First release. Twig as the engine of mj-zana/view: the same template folders and names,
