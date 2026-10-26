@@ -9,6 +9,8 @@ use Zana\Configuration\ConfigurationInterface;
 use Zana\Container\Contracts\ServiceCollectionInterface;
 use Zana\Container\Contracts\ServiceResolverInterface;
 use Zana\Core\ApplicationInterface;
+use Zana\Core\Cache\CacheClearerInterface;
+use Zana\Core\Cache\CacheWarmerInterface;
 use Zana\Core\ServiceProvider;
 use Zana\View\EngineInterface;
 use Zana\View\TemplatePaths;
@@ -47,7 +49,10 @@ final class TwigServiceProvider extends ServiceProvider
                 return $twig;
             })
             ->singleton(TwigEngine::class)
-            ->singleton(EngineInterface::class, static fn (ServiceResolverInterface $r): EngineInterface => $r->get(TwigEngine::class));
+            ->singleton(EngineInterface::class, static fn (ServiceResolverInterface $r): EngineInterface => $r->get(TwigEngine::class))
+            ->singleton(TwigCache::class)
+            ->tag(CacheClearerInterface::CLEARER_TAG, TwigCache::class)
+            ->tag(CacheWarmerInterface::WARMER_TAG, TwigCache::class);
     }
 
     public function origin(): string

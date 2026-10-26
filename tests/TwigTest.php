@@ -108,6 +108,25 @@ final class TwigTest extends TestCase
         $this->assertSame('<span>&lt;new&gt;</span>', (new TwigEngine($twig))->render('badge', []));
     }
 
+    public function testCompiledTemplatesAreWarmedAndCleared(): void
+    {
+        $cacheDir = sys_get_temp_dir() . '/zana-twig-cache-' . bin2hex(random_bytes(4));
+        $app = Application::configure(__DIR__ . '/app')
+            ->withEnvironment('production')
+            ->withConfiguration(['translation.locales' => ['en', 'fr'], 'view.cache' => $cacheDir])
+            ->withProviders(HttpServiceProvider::class, RoutingServiceProvider::class, TranslationServiceProvider::class, ViewServiceProvider::class, TwigServiceProvider::class)
+            ->withModules(ContactModule::class)
+            ->build();
+        $cache = $app->container()->get(\Zana\View\Twig\TwigCache::class);
+        assert($cache instanceof \Zana\View\Twig\TwigCache);
+
+        $this->assertSame(['4 Twig templates compiled'], $cache->warm($app));
+        $this->assertNotEmpty(glob("{$cacheDir}/*/*.php"));
+        $this->assertSame(["compiled Twig templates ({$cacheDir})"], $cache->clear($app));
+        $this->assertSame([], glob("{$cacheDir}/*") ?: []);
+        @rmdir($cacheDir);
+    }
+
     public function testMissingTemplatesAreViewExceptions(): void
     {
         $engine = $this->container->get(EngineInterface::class);
