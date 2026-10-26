@@ -6,7 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.5",
-        "mj-zana/view": "^2.1",
+        "mj-zana/view": "^2.4",
         "twig/twig": "^3.14"
     },
     "require-dev": {
@@ -25,13 +25,13 @@
         }
     },
     "repositories": [
-        { "type": "path", "url": "../zana-container", "options": { "symlink": true, "versions": { "mj-zana/container": "2.3.0" } } },
-        { "type": "path", "url": "../zana-configuration", "options": { "symlink": true, "versions": { "mj-zana/configuration": "2.3.0" } } },
-        { "type": "path", "url": "../zana-core", "options": { "symlink": true, "versions": { "mj-zana/core": "2.3.0" } } },
-        { "type": "path", "url": "../zana-http", "options": { "symlink": true, "versions": { "mj-zana/http": "2.3.0" } } },
-        { "type": "path", "url": "../zana-routing", "options": { "symlink": true, "versions": { "mj-zana/routing": "2.3.0" } } },
-        { "type": "path", "url": "../zana-translation", "options": { "symlink": true, "versions": { "mj-zana/translation": "2.3.0" } } },
-        { "type": "path", "url": "../zana-view", "options": { "symlink": true, "versions": { "mj-zana/view": "2.3.0" } } }
+        { "type": "path", "url": "../zana-container", "options": { "symlink": true, "versions": { "mj-zana/container": "2.4.0" } } },
+        { "type": "path", "url": "../zana-configuration", "options": { "symlink": true, "versions": { "mj-zana/configuration": "2.4.0" } } },
+        { "type": "path", "url": "../zana-core", "options": { "symlink": true, "versions": { "mj-zana/core": "2.4.0" } } },
+        { "type": "path", "url": "../zana-http", "options": { "symlink": true, "versions": { "mj-zana/http": "2.4.0" } } },
+        { "type": "path", "url": "../zana-routing", "options": { "symlink": true, "versions": { "mj-zana/routing": "2.4.0" } } },
+        { "type": "path", "url": "../zana-translation", "options": { "symlink": true, "versions": { "mj-zana/translation": "2.4.0" } } },
+        { "type": "path", "url": "../zana-view", "options": { "symlink": true, "versions": { "mj-zana/view": "2.4.0" } } }
     ],
     "scripts": {
         "test": "phpunit",

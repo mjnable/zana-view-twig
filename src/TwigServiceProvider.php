@@ -47,9 +47,9 @@ final class TwigServiceProvider extends ServiceProvider
                 $twig->addExtension(new HelpersExtension($helpers));
 
                 return $twig;
-            })
+            })->uses(ApplicationInterface::class, TemplatePaths::class, ViewHelpers::class, ConfigurationInterface::class)
             ->singleton(TwigEngine::class)
-            ->singleton(EngineInterface::class, static fn (ServiceResolverInterface $r): EngineInterface => $r->get(TwigEngine::class))
+            ->singleton(EngineInterface::class, static fn (ServiceResolverInterface $r): EngineInterface => $r->get(TwigEngine::class))->uses(TwigEngine::class)
             ->singleton(TwigCache::class)
             ->tag(CacheClearerInterface::CLEARER_TAG, TwigCache::class)
             ->tag(CacheWarmerInterface::WARMER_TAG, TwigCache::class);
