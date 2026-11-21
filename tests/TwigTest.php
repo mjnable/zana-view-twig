@@ -110,10 +110,10 @@ final class TwigTest extends TestCase
 
     public function testCompiledTemplatesAreWarmedAndCleared(): void
     {
-        $cacheDir = sys_get_temp_dir() . '/zana-twig-cache-' . bin2hex(random_bytes(4));
+        $cacheDir = str_replace('\\', '/', sys_get_temp_dir()) . '/zana-twig-cache-' . bin2hex(random_bytes(4));
         $app = Application::configure(__DIR__ . '/app')
             ->withEnvironment('production')
-            ->withConfiguration(['translation.locales' => ['en', 'fr'], 'view.cache' => $cacheDir])
+            ->withConfiguration(['translation.locales' => ['en', 'fr'], 'view.cache' => $cacheDir, 'security.secret' => 'very-secret-value-0123456789abcdef'])
             ->withProviders(HttpServiceProvider::class, RoutingServiceProvider::class, TranslationServiceProvider::class, ViewServiceProvider::class, TwigServiceProvider::class)
             ->withModules(ContactModule::class)
             ->build();
@@ -122,6 +122,9 @@ final class TwigTest extends TestCase
 
         $this->assertSame(['4 Twig templates compiled'], $cache->warm($app));
         $this->assertNotEmpty(glob("{$cacheDir}/*/*.php"));
+        foreach (glob("{$cacheDir}/*/*.php") ?: [] as $file) {
+            $this->assertStringStartsWith("<?php\n// zana-signature: ", (string) file_get_contents($file), 'signed (2.35)');
+        }
         $this->assertSame(["compiled Twig templates ({$cacheDir})"], $cache->clear($app));
         $this->assertSame([], glob("{$cacheDir}/*") ?: []);
         @rmdir($cacheDir);

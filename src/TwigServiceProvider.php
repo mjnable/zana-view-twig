@@ -21,7 +21,8 @@ use Zana\View\ViewHelpers;
  *
  * Templates end in .html.twig and use the same folders; autoescape is html.
  * In production, compiled templates are cached in view.cache (default
- * <base>/var/cache/twig); elsewhere templates recompile when they change.
+ * <base>/var/cache/twig), signed when security.secret is set (2.35: see
+ * SignedTwigCache); elsewhere templates recompile when they change.
  * Add Twig extensions in a provider's boot() through Twig\Environment.
  */
 final class TwigServiceProvider extends ServiceProvider
@@ -36,7 +37,15 @@ final class TwigServiceProvider extends ServiceProvider
                 assert($application instanceof ApplicationInterface && $paths instanceof TemplatePaths && $helpers instanceof ViewHelpers);
 
                 $production = $application->environment()->isProduction();
-                $cache = $r->get(ConfigurationInterface::class)->string('view.cache', $application->path('var', 'cache', 'twig'));
+                $config = $r->get(ConfigurationInterface::class);
+                assert($config instanceof ConfigurationInterface);
+                $cache = $config->string('view.cache', $application->path('var', 'cache', 'twig'));
+                // 2.35: signed with a key derived from security.secret, so code written to the directory does not run
+                $secret = $config->get('security.secret');
+                $secret = is_string($secret) || is_int($secret) ? trim((string) $secret) : '';
+                if ($secret !== '') {
+                    $cache = new SignedTwigCache($cache, SignedTwigCache::keyFor($secret), $config->bool('app.include_compiled_caches', false));
+                }
 
                 $twig = new Environment(new TwigLoader($paths), [
                     'autoescape' => 'html',

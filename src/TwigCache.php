@@ -26,6 +26,9 @@ final readonly class TwigCache implements CacheClearerInterface, CacheWarmerInte
     public function clear(ApplicationInterface $application): array
     {
         $cache = $this->twig->getCache(true);
+        if ($cache instanceof SignedTwigCache) {
+            $cache = rtrim($cache->directory(), '/');
+        }
         if (!is_string($cache) || !is_dir($cache)) {
             return [];
         }

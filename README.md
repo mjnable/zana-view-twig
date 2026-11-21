@@ -25,8 +25,8 @@ then end in `.html.twig`, in the same folders: `templates/` and each module's
   `csrf_field()` are not escaped.
 - **Helpers:** every view helper is a Twig function, and `t` is also a filter.
 - **Cache:** in production, compiled templates are cached in `view.cache`
-  (default `var/cache/twig`). Elsewhere, templates recompile when they
-  change.
+  (default `var/cache/twig`), signed when `security.secret` is set (2.35).
+  Elsewhere, templates recompile when they change.
 - **Twig extensions:** add them in a provider's `boot()` through
   `Twig\Environment`.
 

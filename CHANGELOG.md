@@ -3,6 +3,17 @@
 All Zana packages share one version number and are released together. A release that did
 not change this package is not listed.
 
+## 2.35.0 — Unreleased
+
+### Security
+
+- Compiled templates are signed when `security.secret` is set (`SignedTwigCache`): they are PHP files Twig includes,
+  so code written to the cache directory ran on the next page that used the template. Each file carries an
+  HMAC-SHA256 of its contents and of its path in the directory; a file without it, or with another, is not loaded, and
+  Twig compiles the template again from its source. The bytes checked are evaluated, unless
+  `app.include_compiled_caches` (`ApplicationBuilder::includeCompiledCaches()`) asks to include them, for OPcache.
+- `cache:clear` empties the signed cache's directory as before.
+
 ## 2.4.0 — 2026-10-26
 
 ### Changed
